@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
@@ -14,8 +15,10 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.DeepSpace
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNavigationTheme
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.SpaceBlack
 import kotlin.random.Random
 
@@ -25,6 +28,8 @@ private data class Star(val x: Float, val y: Float, val radius: Float, val alpha
  * Fondo degradado con estrellas. Puramente decorativo.
  * Da a su contenido el color de texto del tema (onBackground), porque encima
  * no hay ninguna Surface que lo haga.
+ * El mérito de este Composable es de Claude, yo solo he añadido un
+ * humilde preview.
  */
 @Composable
 fun StarfieldBackground(
@@ -43,7 +48,8 @@ fun StarfieldBackground(
         }
     }
 
-    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+    CompositionLocalProvider(LocalContentColor provides
+            MaterialTheme.colorScheme.onBackground) {
         Box(
             modifier = modifier
                 .fillMaxSize()
@@ -59,5 +65,18 @@ fun StarfieldBackground(
                 },
             content = content,
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StarFieldBackgroundPreview() {
+    MassEffectNavigationTheme {
+        StarfieldBackground {
+            Text(
+                text = "Esto es un preview",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
