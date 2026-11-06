@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -18,7 +21,11 @@ import kotlin.random.Random
 
 private data class Star(val x: Float, val y: Float, val radius: Float, val alpha: Float)
 
-/** Fondo degradado con estrellas. Puramente decorativo. */
+/**
+ * Fondo degradado con estrellas. Puramente decorativo.
+ * Da a su contenido el color de texto del tema (onBackground), porque encima
+ * no hay ninguna Surface que lo haga.
+ */
 @Composable
 fun StarfieldBackground(
     modifier: Modifier = Modifier,
@@ -36,19 +43,21 @@ fun StarfieldBackground(
         }
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(DeepSpace, SpaceBlack)))
-            .drawBehind {
-                stars.forEach { star ->
-                    drawCircle(
-                        color = Color.White.copy(alpha = star.alpha),
-                        radius = star.radius.dp.toPx(),
-                        center = Offset(star.x * size.width, star.y * size.height),
-                    )
-                }
-            },
-        content = content,
-    )
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Brush.verticalGradient(listOf(DeepSpace, SpaceBlack)))
+                .drawBehind {
+                    stars.forEach { star ->
+                        drawCircle(
+                            color = Color.White.copy(alpha = star.alpha),
+                            radius = star.radius.dp.toPx(),
+                            center = Offset(star.x * size.width, star.y * size.height),
+                        )
+                    }
+                },
+            content = content,
+        )
+    }
 }
