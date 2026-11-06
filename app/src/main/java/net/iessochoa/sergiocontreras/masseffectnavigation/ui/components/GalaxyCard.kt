@@ -18,8 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.model.Galaxy
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNavigationTheme
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.galaxyAccent
 
 @Composable
@@ -54,7 +57,11 @@ fun GalaxyCard(
                     )
             )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(text = galaxy.name, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = galaxy.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
                 Text(
                     text = galaxy.description,
                     style = MaterialTheme.typography.bodySmall,
@@ -69,4 +76,20 @@ fun GalaxyCard(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GalaxyCardPreview()  {
+    val firstGalaxy = GalaxyData.galaxies[0]
+    val firstGalaxyPlanets = GalaxyData.systems.filter { it.galaxyId == firstGalaxy.id }
+    MassEffectNavigationTheme {
+        GalaxyCard(
+            galaxy = firstGalaxy,
+            explored = firstGalaxyPlanets.size / 2,
+            total = firstGalaxyPlanets.size,
+            onClick = { }
+        )
+    }
+
 }

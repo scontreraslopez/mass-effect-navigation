@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.iessochoa.sergiocontreras.masseffectnavigation.R
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNavigationTheme
 
 /** Barra "x / total sistemas  ·  NN%". */
 @Composable
@@ -52,6 +54,17 @@ fun ExplorationProgress(
             strokeCap = StrokeCap.Round,
             gapSize = 0.dp,
             drawStopIndicator = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ExplorationProgressPreview() {
+    MassEffectNavigationTheme {
+        ExplorationProgress(
+            explored = 3,
+            total = 10
         )
     }
 }

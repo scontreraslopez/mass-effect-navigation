@@ -20,9 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.iessochoa.sergiocontreras.masseffectnavigation.R
+import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.model.StarSystem
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNavigationTheme
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.galaxyAccent
 
 @Composable
 fun StarSystemItem(
@@ -47,10 +51,17 @@ fun StarSystemItem(
             Box(
                 modifier = Modifier
                     .size(12.dp)
-                    .background(if (system.explored) accent else accent.copy(alpha = 0.3f), CircleShape)
+                    .background(
+                        if (system.explored) accent else accent.copy(alpha = 0.3f),
+                        CircleShape
+                    )
             )
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(text = system.name, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = system.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 Text(
                     text = system.description,
                     style = MaterialTheme.typography.bodySmall,
@@ -68,5 +79,19 @@ fun StarSystemItem(
                 colors = CheckboxDefaults.colors(checkedColor = accent),
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StarSystemPreview() {
+    val firstSystem = GalaxyData.systems[0]
+    val accent = galaxyAccent(firstSystem.galaxyId)
+    MassEffectNavigationTheme {
+        StarSystemItem(
+            system = firstSystem,
+            accent = accent,
+            onToggleExplored = { }
+        )
     }
 }
