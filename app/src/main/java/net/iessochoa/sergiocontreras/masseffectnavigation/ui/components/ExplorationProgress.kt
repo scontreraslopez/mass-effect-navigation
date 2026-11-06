@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import net.iessochoa.sergiocontreras.masseffectnavigation.R
 
 /** Barra "x / total sistemas  ·  NN%". */
 @Composable
@@ -30,12 +32,12 @@ fun ExplorationProgress(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = "$explored / $total sistemas",
+                text = stringResource(R.string.systems_count, explored, total),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                text = "${(fraction * 100).toInt()}%",
+                text = stringResource(R.string.percent, (fraction * 100).toInt()),
                 style = MaterialTheme.typography.bodySmall,
                 color = color,
             )

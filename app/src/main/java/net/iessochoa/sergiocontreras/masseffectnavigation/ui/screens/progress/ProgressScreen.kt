@@ -12,23 +12,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import net.iessochoa.sergiocontreras.masseffectnavigation.R
 import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.model.Galaxy
 import net.iessochoa.sergiocontreras.masseffectnavigation.model.StarSystem
-import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.BackButton
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.ExplorationProgress
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.StarfieldBackground
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNavigationTheme
@@ -36,68 +32,56 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.galaxyAccent
 
 /**
  * Pantalla 3: progreso global de exploración y desglose por galaxia.
+ * Al pulsar una galaxia se avisa con [onGalaxyClick], igual que en la lista de galaxias.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProgressScreen(
     galaxies: List<Galaxy>,
     systems: List<StarSystem>,
-    onBack: () -> Unit,
+    onGalaxyClick: (Galaxy) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val explored = systems.count { it.explored }
     val fraction = if (systems.isEmpty()) 0f else explored.toFloat() / systems.size
 
-    StarfieldBackground(modifier) {
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = {
-                TopAppBar(
-                    navigationIcon = { BackButton(onClick = onBack) },
-                    title = { Text("Progreso de exploración") },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-                )
-            },
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier.padding(innerPadding),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        item {
+            GlobalProgress(
+                fraction = fraction,
+                explored = explored,
+                total = systems.size,
+                modifier = Modifier.padding(vertical = 16.dp),
+            )
+        }
+        item {
+            Text(
+                stringResource(R.string.by_galaxy),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        items(galaxies, key = { it.id }) { galaxy ->
+            val galaxySystems = systems.filter { it.galaxyId == galaxy.id }
+            Card(
+                onClick = { onGalaxyClick(galaxy) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                ),
             ) {
-                item {
-                    GlobalProgress(
-                        fraction = fraction,
-                        explored = explored,
-                        total = systems.size,
-                        modifier = Modifier.padding(vertical = 16.dp),
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(galaxy.name, style = MaterialTheme.typography.titleMedium)
+                    ExplorationProgress(
+                        explored = galaxySystems.count { it.explored },
+                        total = galaxySystems.size,
+                        color = galaxyAccent(galaxy.id),
                     )
-                }
-                item {
-                    Text(
-                        "POR GALAXIA",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                items(galaxies, key = { it.id }) { galaxy ->
-                    val galaxySystems = systems.filter { it.galaxyId == galaxy.id }
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
-                        ),
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            Text(galaxy.name, style = MaterialTheme.typography.titleMedium)
-                            ExplorationProgress(
-                                explored = galaxySystems.count { it.explored },
-                                total = galaxySystems.size,
-                                color = galaxyAccent(galaxy.id),
-                            )
-                        }
-                    }
                 }
             }
         }
@@ -126,13 +110,13 @@ private fun GlobalProgress(
                 gapSize = 0.dp,
             )
             Text(
-                text = "${(fraction * 100).toInt()}%",
+                text = stringResource(R.string.percent, (fraction * 100).toInt()),
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
         }
         Text(
-            text = "$explored de $total sistemas explorados",
+            text = stringResource(R.string.systems_explored, explored, total),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -143,10 +127,12 @@ private fun GlobalProgress(
 @Composable
 private fun ProgressScreenPreview() {
     MassEffectNavigationTheme {
-        ProgressScreen(
-            galaxies = GalaxyData.galaxies,
-            systems = GalaxyData.systems.mapIndexed { i, s -> s.copy(explored = i % 3 != 0) },
-            onBack = {},
-        )
+        StarfieldBackground {
+            ProgressScreen(
+                galaxies = GalaxyData.galaxies,
+                systems = GalaxyData.systems.mapIndexed { i, s -> s.copy(explored = i % 3 != 0) },
+                onGalaxyClick = {},
+            )
+        }
     }
 }

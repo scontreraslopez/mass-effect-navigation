@@ -19,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import net.iessochoa.sergiocontreras.masseffectnavigation.R
 import net.iessochoa.sergiocontreras.masseffectnavigation.model.StarSystem
 
 @Composable
@@ -55,7 +57,7 @@ fun StarSystemItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Text(
-                    text = "${system.planets} planetas",
+                    text = stringResource(R.string.planets_count, system.planets),
                     style = MaterialTheme.typography.labelSmall,
                     color = accent,
                 )

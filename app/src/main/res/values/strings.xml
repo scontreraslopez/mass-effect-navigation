@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Galaxy Tracker</string>
+
+    <!-- Navegación -->
+    <string name="back">Volver</string>
+    <string name="systems_title">Sistemas</string>
+    <string name="progress_title">Progreso de exploración</string>
+    <string name="galaxies">Galaxias</string>
+    <string name="progress">Progreso</string>
+
+    <!-- Pantallas y componentes -->
+    <string name="by_galaxy">POR GALAXIA</string>
+    <string name="percent">%1$d%%</string>
+    <string name="systems_count">%1$d / %2$d sistemas</string>
+    <string name="systems_explored">%1$d de %2$d sistemas explorados</string>
+    <string name="planets_count">%1$d planetas</string>
 </resources>
