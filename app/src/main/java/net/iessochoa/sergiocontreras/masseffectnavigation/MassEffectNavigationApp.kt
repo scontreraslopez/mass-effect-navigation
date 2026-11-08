@@ -8,12 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.GalaxyList
@@ -37,7 +37,7 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.systems.Sys
 @Composable
 fun MassEffectNavigationApp() {
 
-    val backStack = remember { mutableStateListOf<Any>(GalaxyList)}
+    val backStack = rememberNavBackStack(GalaxyList)
     StarfieldBackground {
         // TODO T08 §9 NavigationBar: la barra inferior irá en la ranura bottomBar del Scaffold.
         Scaffold(
@@ -93,7 +93,7 @@ fun MassEffectNavigationApp() {
 }
 
 @StringRes
-private fun titleFor(key: Any): Int = when (key) {
+private fun titleFor(key: NavKey): Int = when (key) {
     is SystemList -> R.string.systems_title
     Progress -> R.string.progress_title
     else -> R.string.app_name
