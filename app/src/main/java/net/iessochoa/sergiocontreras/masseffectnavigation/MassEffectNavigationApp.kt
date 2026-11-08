@@ -30,7 +30,6 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.systems.Sys
 fun MassEffectNavigationApp() {
 
     val backStack = remember { mutableStateListOf<Any>(GalaxyList)}
-
     // TODO T08 §6 TopAppBar: este StarfieldBackground y este Scaffold pasan a GalaxyTrackerApp,
     //  con la TopAppBar global. Aquí solo quedará la llamada a GalaxyTrackerApp().
     StarfieldBackground {
@@ -58,11 +57,14 @@ fun MassEffectNavigationApp() {
                             onToggleExplored = {  }
                         )
                     }
-                    /*
                     entry<Progress> {
-                        ProgressScreen()
+                        ProgressScreen(
+                            galaxies = GalaxyData.galaxies,
+                            systems = GalaxyData.systems,
+                            onGalaxyClick = { galaxy -> backStack.add(SystemList(galaxy.id)) }
+                        )
                     }
-                    */
+                    
                 }
             )
         }
