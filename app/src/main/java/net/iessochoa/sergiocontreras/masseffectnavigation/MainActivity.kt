@@ -19,22 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MassEffectNavigationTheme {
-                // TODO T08 §6 TopAppBar: este StarfieldBackground y este Scaffold pasan a GalaxyTrackerApp,
-                //  con la TopAppBar global. Aquí solo quedará la llamada a GalaxyTrackerApp().
-                StarfieldBackground {
-                    // TODO T08 §9 NavigationBar: la barra inferior irá en la ranura bottomBar del Scaffold.
-                    Scaffold(containerColor = Color.Transparent) { innerPadding ->
-                        // TODO T08 §4 NavDisplay: sustituye esta pantalla por GalaxyTrackerApp, con la pila y el NavDisplay.
-                        // TODO T08 §7 rememberNavBackStack: guarda la pila con rememberNavBackStack para que sobreviva al giro.
-                        // TODO T08 §8 ViewModel: los datos salen directamente de GalaxyData; llévalos a GalaxyViewModel.
-                        GalaxyListScreen(
-                            galaxies = GalaxyData.galaxies,
-                            systems = GalaxyData.systems,
-                            onGalaxyClick = { /* TODO T08 §4 NavDisplay: abrir los sistemas de la galaxia */ },
-                            modifier = Modifier.padding(innerPadding),
-                        )
-                    }
-                }
+                MassEffectNaviationApp()
             }
         }
     }

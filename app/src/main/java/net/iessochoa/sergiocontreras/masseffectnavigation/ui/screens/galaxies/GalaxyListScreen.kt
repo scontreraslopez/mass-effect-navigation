@@ -18,7 +18,7 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.theme.MassEffectNav
 /**
  * Pantalla 1: listado de galaxias.
  * Stateless: recibe los datos y avisa hacia arriba con lambdas.
- * No tiene Scaffold ni fondo propios: la barra superior, la inferior y el fondo son globales.
+ * No tiene Scaffold ni fondo propio: la barra superior, la inferior y el fondo son globales.
  */
 @Composable
 fun GalaxyListScreen(
@@ -51,7 +51,11 @@ private fun GalaxyListScreenPreview() {
         StarfieldBackground {
             GalaxyListScreen(
                 galaxies = GalaxyData.galaxies,
-                systems = GalaxyData.systems.mapIndexed { i, s -> s.copy(explored = i % 3 == 0) },
+                systems = GalaxyData.systems.mapIndexed {
+                    index, system -> system.copy(
+                        explored = index % 3 == 0       // Preview con 1/3 explorado
+                    )
+                },
                 onGalaxyClick = {},
             )
         }
