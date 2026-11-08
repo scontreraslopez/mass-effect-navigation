@@ -18,7 +18,7 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.galaxies.Ga
  */
 
 @Composable
-fun MassEffectNaviationApp() {
+fun MassEffectNavigationApp() {
     // TODO T08 §6 TopAppBar: este StarfieldBackground y este Scaffold pasan a GalaxyTrackerApp,
     //  con la TopAppBar global. Aquí solo quedará la llamada a GalaxyTrackerApp().
     StarfieldBackground {
