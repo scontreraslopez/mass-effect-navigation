@@ -8,9 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -19,6 +22,7 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.GalaxyList
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.Progress
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.SystemList
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.GalaxyViewModel
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.BackButton
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.StarfieldBackground
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.galaxies.GalaxyListScreen
@@ -35,17 +39,22 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.systems.Sys
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MassEffectNavigationApp() {
-
+fun MassEffectNavigationApp(viewModel: GalaxyViewModel = viewModel()) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val backStack = rememberNavBackStack(GalaxyList)
+
     StarfieldBackground {
         // TODO T08 §9 NavigationBar: la barra inferior irá en la ranura bottomBar del Scaffold.
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
                 TopAppBar(
-                    title = { Text(
-                        stringResource(titleFor(backStack.last())))
+                    title = {
+                        val top = backStack.last()
+                        Text(
+                            if (top is SystemList) uiState.galaxies.first { it.id == top.galaxyId }.name
+                            else stringResource(titleFor(top))
+                        )
                     },
                     navigationIcon = {
                         if (backStack.size > 1) { // Arriba nunca saca de la app
@@ -54,8 +63,6 @@ fun MassEffectNavigationApp() {
                 )
             }
         ) { innerPadding ->
-            // TODO T08 §7 rememberNavBackStack: guarda la pila con rememberNavBackStack para que sobreviva al giro.
-            // TODO T08 §8 ViewModel: los datos salen directamente de GalaxyData; llévalos a GalaxyViewModel.
             NavDisplay(
                 backStack = backStack,
                 onBack = {
@@ -66,22 +73,24 @@ fun MassEffectNavigationApp() {
                 entryProvider = entryProvider {
                     entry<GalaxyList> {
                         GalaxyListScreen(
-                            galaxies = GalaxyData.galaxies,
-                            systems = GalaxyData.systems,
+                            galaxies = uiState.galaxies,
+                            systems = uiState.systems,
                             onGalaxyClick = { galaxy -> backStack.add(SystemList(galaxy.id)) }
                         )
                     }
                     entry<SystemList> { systemList ->
                         SystemListScreen(
-                            galaxy = GalaxyData.galaxies.first { it.id == systemList.galaxyId},
-                            systems = GalaxyData.systems.filter { it.galaxyId == systemList.galaxyId },
-                            onToggleExplored = {  }
+                            galaxy = uiState.galaxies.first { it.id == systemList.galaxyId},
+                            systems = uiState.systems.filter { it.galaxyId == systemList.galaxyId },
+                            onToggleExplored = {
+                                system -> viewModel.toggleExplored(system.id)
+                            }
                         )
                     }
                     entry<Progress> {
                         ProgressScreen(
-                            galaxies = GalaxyData.galaxies,
-                            systems = GalaxyData.systems,
+                            galaxies = uiState.galaxies,
+                            systems = uiState.systems,
                             onGalaxyClick = { galaxy -> backStack.add(SystemList(galaxy.id)) }
                         )
                     }
