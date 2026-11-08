@@ -2,9 +2,43 @@
 
 Un mapa galáctico al estilo de Mass Effect: una lista de galaxias, los sistemas de cada una (que marcas como explorados) y una pantalla con tu progreso de exploración.
 
-Es el **proyecto de partida** del ejercicio *Galaxy Tracker* del tema **T08 · Navegación** de PMDM. Las pantallas, el modelo, los datos y los componentes ya están hechos; falta conectarlo todo con Navigation 3: la pila, el `NavDisplay`, la barra superior, la barra inferior y el ViewModel. Los `// TODO` de `MainActivity.kt` dicen qué sección del tema va en cada sitio.
+Es el **proyecto de partida** del ejercicio *Galaxy Tracker* del tema **T08 · Navegación** de PMDM. Las pantallas, el modelo, los datos y los componentes ya están hechos; falta conectarlo todo con Navigation 3: la pila, el `NavDisplay`, la barra superior, la barra inferior y el ViewModel. Los `// TODO` de `MassEffectNavigationApp.kt` dicen qué sección del tema va en cada sitio.
 
-La solución completa está en la rama `solucion`, con un commit por cada paso del ejercicio.
+## Cómo trabajar: rama `starter`
+
+El repositorio tiene dos ramas:
+
+| Rama | Para qué |
+|---|---|
+| `starter` | **Tu punto de partida. Trabaja siempre aquí** (o en una rama tuya creada a partir de ella). |
+| `main` | La solución completa, con un commit por cada paso del ejercicio. **Solo para consultar.** |
+
+```bash
+git clone https://github.com/scontreraslopez/mass-effect-navigation.git
+cd mass-effect-navigation
+git switch starter
+```
+
+En `starter` todavía no están las dependencias de Navigation 3 ni de Kotlin Serialization. Añadirlas es el primer paso del ejercicio.
+
+Usa `main` para comprobar tu solución cuando termines un paso o si te atascas. Para ver los pasos y comparar tu código con la solución:
+
+```bash
+git fetch origin                                    # trae la última versión de la solución
+git log --oneline starter..origin/main              # lista de pasos (un commit cada uno)
+git show <commit>                                   # qué cambia en un paso concreto
+git diff HEAD origin/main -- app/src/main/java      # tu código frente a la solución final
+```
+
+No hagas commits en `main`: si lo haces, al actualizar el repositorio te encontrarás conflictos con la solución.
+
+### Volver a empezar
+
+La tag `starting-point` marca el proyecto de partida tal y como se entregó. Si quieres repetir el ejercicio desde cero sin perder tu intento anterior, crea una rama nueva a partir de ella:
+
+```bash
+git switch -c segundo-intento starting-point
+```
 
 ## Modelo de datos
 
@@ -31,7 +65,7 @@ data class StarSystem(
 - `explored` es el único dato que cambia mientras se usa la app. Como las `data class` son inmutables, marcar un sistema significa sustituirlo por `system.copy(explored = !system.explored)` dentro de la lista.
 - El progreso (cuántos explorados de cuántos, el porcentaje) **no se guarda**: se calcula a partir de la lista de sistemas cada vez que se pinta.
 
-Los datos de prueba están en `data/GalaxyData.kt`: un `object` con dos listas en memoria (5 galaxias y 16 sistemas). No hay red ni base de datos. Ahora mismo `MainActivity` lee esas listas directamente; en el ejercicio pasarán a un `GalaxyViewModel` que las expone como estado y sabe cambiar `explored`.
+Los datos de prueba están en `data/GalaxyData.kt`: un `object` con dos listas en memoria (5 galaxias y 16 sistemas). No hay red ni base de datos. En `starter`, `MassEffectNavigationApp` lee esas listas directamente; en el ejercicio pasarán a un `GalaxyViewModel` que las expone como estado y sabe cambiar `explored`.
 
 ## Pantallas
 
@@ -79,7 +113,8 @@ Cada galaxia tiene un color de acento propio que se obtiene con `galaxyAccent(ga
 
 ```
 masseffectnavigation/
-├── MainActivity.kt          ← aquí están los TODO del ejercicio
+├── MainActivity.kt
+├── MassEffectNavigationApp.kt  ← aquí están los TODO del ejercicio
 ├── model/                   ← Galaxy, StarSystem
 ├── data/                    ← GalaxyData (datos mock)
 └── ui/
@@ -92,3 +127,4 @@ masseffectnavigation/
 ```
 
 Los textos de la interfaz (títulos de las barras, etiquetas de las pestañas, formatos de porcentaje y contadores) ya están en `res/values/strings.xml`.
+
