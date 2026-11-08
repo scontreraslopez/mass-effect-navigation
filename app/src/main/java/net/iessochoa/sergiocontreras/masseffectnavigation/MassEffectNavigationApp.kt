@@ -1,19 +1,25 @@
 package net.iessochoa.sergiocontreras.masseffectnavigation
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import net.iessochoa.sergiocontreras.masseffectnavigation.data.GalaxyData
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.GalaxyList
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.Progress
 import net.iessochoa.sergiocontreras.masseffectnavigation.navigation.SystemList
+import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.BackButton
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.components.StarfieldBackground
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.galaxies.GalaxyListScreen
 import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.progress.ProgressScreen
@@ -27,16 +33,27 @@ import net.iessochoa.sergiocontreras.masseffectnavigation.ui.screens.systems.Sys
  * Creado en Settings -> Editor -> File and Code Templates
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MassEffectNavigationApp() {
 
     val backStack = remember { mutableStateListOf<Any>(GalaxyList)}
-    // TODO T08 §6 TopAppBar: este StarfieldBackground y este Scaffold pasan a GalaxyTrackerApp,
-    //  con la TopAppBar global. Aquí solo quedará la llamada a GalaxyTrackerApp().
     StarfieldBackground {
         // TODO T08 §9 NavigationBar: la barra inferior irá en la ranura bottomBar del Scaffold.
-        Scaffold(containerColor = Color.Transparent) { innerPadding ->
-            // TODO T08 §4 NavDisplay: sustituye esta pantalla por GalaxyTrackerApp, con la pila y el NavDisplay.
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopAppBar(
+                    title = { Text(
+                        stringResource(titleFor(backStack.last())))
+                    },
+                    navigationIcon = {
+                        if (backStack.size > 1) { // Arriba nunca saca de la app
+                            BackButton(onClick = { backStack.removeLastOrNull() })
+                        }                    }
+                )
+            }
+        ) { innerPadding ->
             // TODO T08 §7 rememberNavBackStack: guarda la pila con rememberNavBackStack para que sobreviva al giro.
             // TODO T08 §8 ViewModel: los datos salen directamente de GalaxyData; llévalos a GalaxyViewModel.
             NavDisplay(
@@ -73,4 +90,11 @@ fun MassEffectNavigationApp() {
             )
         }
     }
+}
+
+@StringRes
+private fun titleFor(key: Any): Int = when (key) {
+    is SystemList -> R.string.systems_title
+    Progress -> R.string.progress_title
+    else -> R.string.app_name
 }
