@@ -32,6 +32,14 @@ git diff HEAD origin/main -- app/src/main/java      # tu código frente a la sol
 
 No hagas commits en `main`: si lo haces, al actualizar el repositorio te encontrarás conflictos con la solución.
 
+### Volver a empezar
+
+La tag `starting-point` marca el proyecto de partida tal y como se entregó. Si quieres repetir el ejercicio desde cero sin perder tu intento anterior, crea una rama nueva a partir de ella:
+
+```bash
+git switch -c segundo-intento starting-point
+```
+
 ## Modelo de datos
 
 Dos `data class` en el paquete `model`, relacionadas por id (como haríamos con una clave ajena en una BD):
