@@ -1,5 +1,6 @@
 package net.iessochoa.sergiocontreras.masseffectnavigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -40,7 +41,10 @@ fun MassEffectNavigationApp() {
             // TODO T08 §8 ViewModel: los datos salen directamente de GalaxyData; llévalos a GalaxyViewModel.
             NavDisplay(
                 backStack = backStack,
-                onBack = { backStack.removeLastOrNull() },
+                onBack = {
+                    backStack.removeLastOrNull()
+                    Log.d("GalaxyTracker", "Pila: ${backStack.toList()}")
+                },
                 modifier = Modifier.padding(innerPadding),
                 entryProvider = entryProvider {
                     entry<GalaxyList> {
