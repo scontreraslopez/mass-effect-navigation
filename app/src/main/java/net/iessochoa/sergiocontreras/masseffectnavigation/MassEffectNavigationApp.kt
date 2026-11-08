@@ -50,7 +50,6 @@ fun MassEffectNavigationApp(viewModel: GalaxyViewModel = viewModel()) {
     val backStack = rememberNavBackStack(GalaxyList)
 
     StarfieldBackground {
-        // TODO T08 §9 NavigationBar: la barra inferior irá en la ranura bottomBar del Scaffold.
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
